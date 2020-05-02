@@ -4,6 +4,17 @@
 #include "instanceof.h"
 #include <QThread>
 
+Game::Game() :
+    QObject(nullptr),
+    _map(nullptr)
+{
+    mapDraw = new MapDrawing(_map);
+    _playerID = -1;
+    connect(&_mySocket, &QWebSocket::disconnected, this, &Game::disconnected);
+    connect(&_mySocket, &QWebSocket::connected, this, &Game::connected);
+    connect(&_mySocket, &QWebSocket::binaryMessageReceived, this, &Game::newData);
+}
+
 void Game::proceedMoves() {
     for(const GameMove& move: _movesList){
         switch (move.moveType()) {
@@ -42,16 +53,7 @@ void Game::clearMovesList(){
     emit this->movesListChanged(_movesList.toStringList());
 }
 
-Game::Game() :
-    QObject(nullptr),
-    _map(nullptr)
-{
-    mapDraw = new MapDrawing(_map);
-    _playerID = -1;
-    connect(&_mySocket, &QWebSocket::disconnected, this, &Game::disconnected);
-    connect(&_mySocket, &QWebSocket::connected, this, &Game::connected);
-    connect(&_mySocket, &QWebSocket::binaryMessageReceived, this, &Game::newData);
-}
+// MOVES REQUESTS
 
 void Game::requestStepForward(int id){
     if(id > 2)
@@ -106,6 +108,8 @@ void Game::ready(){
     emit this->sigReady(_ready);
 }
 
+// INFORM GAME WINDOW ABOUT CONNECTION STATUS CHANGED
+
 void Game::disconnected(){
     clearMovesList();
     _playerID = -1;
@@ -115,6 +119,8 @@ void Game::disconnected(){
 void Game::connected(){
     emit this->sigConnect();
 }
+
+// REACTIONS TO DATA RECEIVED
 
 void Game::newData(const QByteArray& data){
     QJsonObject dataJson = QJsonDocument().fromBinaryData(data).object();

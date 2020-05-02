@@ -1,7 +1,5 @@
 #include "moveslist.h"
 
-MovesList::MovesList() : QVector<GameMove>()
-{}
 
 void MovesList::setId(int id)
 {

@@ -15,7 +15,7 @@ private:
     int _playerID;
     MoveType _moveType;
 public:
-    GameMove();
+    GameMove() : QObject(){};
     GameMove(GameMove&&);
     GameMove(const GameMove&);
     GameMove(int, MoveType);

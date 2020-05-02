@@ -44,6 +44,8 @@ MapDrawing::~MapDrawing()
     delete paintOnImage;
 }
 
+// FUNCTION TO DRAW EVERY ELEMENT
+
 void MapDrawing::drawElement(QSharedPointer<Map::MapElement> el)
 {
     paintOnImage->setRenderHint(QPainter::Antialiasing);

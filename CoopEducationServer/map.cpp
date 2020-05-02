@@ -18,94 +18,6 @@ Map::Map::Map(int w, int h) :
         board[i] = new QSharedPointer<MapElement>[w];
 }
 
-void Map::Map::loadMap1()
-{
-    for(int i = 0; i < _width; ++i)
-        for(int j = 0; j < _height; ++j){
-            if(i < 5 || j < 6 || i > _width - 6 || j > _height - 6)
-                board[i][j] = QSharedPointer<MapElement>(new MapWall(i, j));
-            else
-                board[i][j] = QSharedPointer<MapElement>(new MapGround(i, j));
-        }
-
-    placeMovable(QSharedPointer<MapElementMovable>(new MapMovableCharacter(5, 6, 0, player1Color)));
-    board[5][9] = QSharedPointer<MapElement>(new MapFinish(5, 9, 0, player1Color));
-
-    placeMovable(QSharedPointer<MapElementMovable>(new MapMovableCharacter(5, 9, 1, player2Color)));
-    board[9][9] = QSharedPointer<MapElement>(new MapFinish(9, 9, 1, player2Color));
-}
-
-void Map::Map::loadMap2() {
-    for(int i = 0; i < _width; ++i)
-        for(int j = 0; j < _height; ++j){
-            if(j == 6 && i == 6)
-                board[i][j] = QSharedPointer<MapElement>(new MapPistonButton(i, j, {255,255,0}));
-            else if(i == 7){
-                if(j == 5)
-                    board[i][j] = QSharedPointer<MapElement>(new MapPiston(i, j, 6, 6));
-                else
-                    board[i][j] = QSharedPointer<MapElement>(new MapWall(i, j));
-            }
-            else if(i < 3 || j < 4 || i > _height - 4 || j > _width - 4)
-                board[i][j] = QSharedPointer<MapElement>(new MapWall(i, j));
-            else
-                board[i][j] = QSharedPointer<MapElement>(new MapGround(i, j));
-        }
-    placeMovable(QSharedPointer<MapElementMovable>(new MapMovableCharacter(5, 8, 0, player1Color)));
-    board[8][8] = QSharedPointer<MapElement>(new MapFinish(8, 8, 0, player1Color));
-
-    placeMovable(QSharedPointer<MapElementMovable>(new MapMovableCharacter(9, 8, 1, player2Color)));
-    board[5][4] = QSharedPointer<MapElement>(new MapFinish(5, 4, 1, player2Color));
-}
-
-void Map::Map::loadMap3() {
-    Color pistonColors[] = {{255,255,0}, {0,255,255}, {255,0,255}, {0,255,0}, {255,255,255}, {0,0,0}};
-    int buttonsCoords[][2] = {{6,7}, {7,7}, {8,7}, {9,7}, {10,7}, {11,7}};
-    QVector<int> coordsIndexes;
-    for(int i = 0; i < 6; ++i)
-        coordsIndexes.append(i);
-
-    srand(time(NULL));
-    for(int i = 0; i < 6; ++i){
-        int tmpInd = rand() % (6-i);
-        int tmpIndCoord = coordsIndexes[tmpInd];
-        coordsIndexes.remove(tmpInd);
-        coordsIndexes.append(tmpIndCoord);
-    }
-
-    for(int i = 0; i < 6; ++i){
-        int x = buttonsCoords[i][0];
-        int y = buttonsCoords[i][1];
-        board[x][y].reset();
-        board[x][y] = QSharedPointer<MapElement>(new MapPistonButton(x, y, pistonColors[i]));
-    }
-    for(int i = 0; i < _width; ++i)
-        for(int j = 0; j < _height; ++j){
-            if(i < 1 || j < 1 || i > _height - 2 || j > _width - 2)
-                board[i][j] = QSharedPointer<MapElement>(new MapWall(i, j));
-            else if(i == 4){
-                board[i][j] = QSharedPointer<MapElement>(new MapWall(i, j));
-            }
-            else if(i < 4){
-                if(j % 2 == 0){
-                    if(i == 2)
-                        board[i][j] = QSharedPointer<MapElement>(new MapPiston(i, j, buttonsCoords[coordsIndexes[j/2 - 1]][0], buttonsCoords[coordsIndexes[j/2 - 1]][1]));
-                    else
-                        board[i][j] = QSharedPointer<MapElement>(new MapWall(i, j));
-                }
-                else
-                    board[i][j] = QSharedPointer<MapElement>(new MapGround(i, j));
-            }
-            else if(board[i][j] == nullptr)
-                board[i][j] = QSharedPointer<MapElement>(new MapGround(i, j));
-        }
-    placeMovable(QSharedPointer<MapElementMovable>(new MapMovableCharacter(2, 13, 0, player1Color)));
-    board[2][1] = QSharedPointer<MapElement>(new MapFinish(2, 1, 0, player1Color));
-
-    placeMovable(QSharedPointer<MapElementMovable>(new MapMovableCharacter(9, 9, 1, player2Color)));
-    board[12][7] = QSharedPointer<MapElement>(new MapFinish(12, 7, 1, player2Color));
-}
-
 bool Map::Map::canMoveTo(int x, int y) const
 {
     return board[x][y]->mayBeOccupied() && board[x][y]->occupyingElement().isNull();
@@ -116,6 +28,14 @@ void Map::Map::placeMovable(QSharedPointer<MapElementMovable> movable) {
         board[movable->x()][movable->y()]->_occupyingElement = movable;
     }
 }
+
+QSharedPointer<Map::MapElementMovable> Map::MapElement::removeOccupyingElement() {
+    QSharedPointer<MapElementMovable> _data = _occupyingElement;
+    _occupyingElement = QSharedPointer<MapElementMovable>(nullptr);
+    return _data;
+}
+
+// MAP JSON HANDLING
 
 void Map::Map::fromJsonArray(QJsonArray arr) {
     while(!arr.isEmpty()){
@@ -226,10 +146,4 @@ QJsonObject Map::MapElement::toJsonObject() const
         elementObject.insert("character", _occupyingElement->toJsonObject());
     }
     return elementObject;
-}
-
-QSharedPointer<Map::MapElementMovable> Map::MapElement::removeOccupyingElement() {
-    QSharedPointer<MapElementMovable> _data = _occupyingElement;
-    _occupyingElement = QSharedPointer<MapElementMovable>(nullptr);
-    return _data;
 }

@@ -29,7 +29,7 @@ private:
     void nextMap();
 
     void sendMap(int);
-    void sendPlayerInfo(int);
+    qint64 sendPlayerInfo(int);
     void sendMovesList();
 
     void resetPlayersStats();

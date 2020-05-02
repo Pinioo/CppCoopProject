@@ -25,6 +25,8 @@ GameWindow::~GameWindow() {
     delete ui;
 }
 
+//-------------------------PAINTING----------------------------
+
 void GameWindow::paintEvent(QPaintEvent *event){
     QWidget::paintEvent(event);
 
@@ -39,6 +41,8 @@ void GameWindow::paintEvent(QPaintEvent *event){
 void GameWindow::updatePaint(){
     repaint();
 }
+
+//----------------------BUTTONS ACTIONS--------------------------
 
 void GameWindow::on_goButton_released()
 {
@@ -71,6 +75,9 @@ void GameWindow::on_connectButton_released()
 {
     game->connectToServer(ui->urlInput->text());
 }
+
+
+//--------------------GAME SIGNALS REACTIONS-----------------------
 
 void GameWindow::connectedSocket()
 {

@@ -1,9 +1,5 @@
 #include "gamemove.h"
 
-GameMove::GameMove() : QObject(){
-
-}
-
 GameMove::GameMove(GameMove&& other) : QObject()
 {
     int tmp = _playerID;
@@ -31,20 +27,6 @@ GameMove& GameMove::operator=(const GameMove& other)
     return *this;
 }
 
-GameMove GameMove::fromJsonObject(const QJsonObject& obj)
-{
-    int id = obj.value("playerID").toInt();
-    QString moveTypeStr = obj.value("move").toString();
-    MoveType moveType;
-    if(moveTypeStr == "LEFT")
-        moveType = LEFT;
-    else if(moveTypeStr == "RIGHT")
-        moveType = RIGHT;
-    else
-        moveType = GO;
-    return GameMove(id, moveType);
-}
-
 QString GameMove::toString() const
 {
     switch (_moveType) {
@@ -60,6 +42,22 @@ QString GameMove::toString() const
         default:
             return "";
     }
+}
+
+// GAME MOVE TO AND FROM JSON
+
+GameMove GameMove::fromJsonObject(const QJsonObject& obj)
+{
+    int id = obj.value("playerID").toInt();
+    QString moveTypeStr = obj.value("move").toString();
+    MoveType moveType;
+    if(moveTypeStr == "LEFT")
+        moveType = LEFT;
+    else if(moveTypeStr == "RIGHT")
+        moveType = RIGHT;
+    else
+        moveType = GO;
+    return GameMove(id, moveType);
 }
 
 QJsonObject GameMove::toJsonObject() const

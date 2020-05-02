@@ -11,7 +11,7 @@ private:
     int _playerId;
 
 public:
-    MovesList();
+    MovesList() : QVector<GameMove>() {};
     void setId(int);
     QStringList toStringList() const;
 };

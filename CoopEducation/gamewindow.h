@@ -20,7 +20,6 @@ public:
     GameWindow(QWidget *parent = nullptr);
     ~GameWindow();
 
-    void doRepaint() {repaint();};
     void paintEvent(QPaintEvent *event);
     void updatePaint();
 private slots:

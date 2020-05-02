@@ -30,6 +30,7 @@ namespace Map {
         void placeMovable(QSharedPointer<MapElementMovable> movable);
         void moveTo(int oldX, int oldY, int newX, int newY);
         void update();
+
         void fromJsonArray(QJsonArray);
 
         ~Map();
@@ -54,11 +55,7 @@ namespace Map {
         bool mayBeOccupied() const {return _mayBeOccupied;}
         QSharedPointer<MapElementMovable> occupyingElement() {return _occupyingElement;}
 
-        QSharedPointer<MapElementMovable> removeOccupyingElement() {
-            QSharedPointer<MapElementMovable> _data = _occupyingElement;
-            _occupyingElement = QSharedPointer<MapElementMovable>(nullptr);
-            return _data;
-        }
+        QSharedPointer<MapElementMovable> removeOccupyingElement();
 
         virtual ~MapElement() = default;
 

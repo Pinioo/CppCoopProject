@@ -37,6 +37,19 @@ void Map::Map::update() {
         }
 }
 
+QSharedPointer<Map::MapElementMovable> Map::MapElement::removeOccupyingElement() {
+    QSharedPointer<MapElementMovable> _data = _occupyingElement;
+    _occupyingElement = QSharedPointer<MapElementMovable>(nullptr);
+    return _data;
+}
+
+Map::Map::~Map() {
+    for(int i = 0; i < _height; ++i)
+        delete[] board[i];
+    delete[] board;
+}
+
+// MAP JSON READING AND WRITING
 
 void Map::Map::fromJsonArray(QJsonArray arr) {
     while(!arr.isEmpty()){
@@ -83,18 +96,7 @@ void Map::Map::fromJsonArray(QJsonArray arr) {
     }
 }
 
-Map::Map::~Map()
-{
-    for(int i = 0; i < _height; ++i)
-        delete[] board[i];
-
-    delete[] board;
-}
-
-
-
-QSharedPointer<Map::Map> Map::fromJsonObject(QJsonObject mapObject)
-{
+QSharedPointer<Map::Map> Map::fromJsonObject(QJsonObject mapObject) {
     if(mapObject.value("type") != "map")
         throw new std::exception();
 

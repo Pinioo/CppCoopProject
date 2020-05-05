@@ -16,12 +16,16 @@ class Game : public QObject
 {
     Q_OBJECT
 
+public:
+    static constexpr int MAX_PLAYERS = 2;
+    static constexpr int DEFAULT_PORT = 8888;
+
 private:
     QWebSocket _mySocket;
 
     QSharedPointer<Map::Map> _map;
 
-    QSharedPointer<Map::MapMovableCharacter> _players[2];
+    QSharedPointer<Map::MapMovableCharacter> _players[MAX_PLAYERS];
 
     MovesList _movesList;
 

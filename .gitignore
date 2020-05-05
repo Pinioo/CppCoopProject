@@ -1,3 +1,5 @@
 build*/Makefile
 build*/Coop*
 build*/*.o
+Pinowski*
+README.txt

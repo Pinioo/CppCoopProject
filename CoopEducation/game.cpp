@@ -56,7 +56,7 @@ void Game::clearMovesList(){
 // MOVES REQUESTS
 
 void Game::requestStepForward(int id){
-    if(id > 2)
+    if(id >= MAX_PLAYERS)
         qDebug() << "Player with id " << id << " doesn't exist";
     else{
         QJsonObject mainObject;
@@ -68,7 +68,7 @@ void Game::requestStepForward(int id){
 }
 
 void Game::requestRightTurn(int id){
-    if(id > 2)
+    if(id >= MAX_PLAYERS)
         qDebug() << "Player with id " << id << " doesn't exist";
     else{
         QJsonObject mainObject;
@@ -81,7 +81,7 @@ void Game::requestRightTurn(int id){
 
 void Game::requestLeftTurn(int id){
 
-    if(id > 2)
+    if(id >= MAX_PLAYERS)
         qDebug() << "Player with id " << id << " doesn't exist";
     else {
         QJsonObject mainObject;

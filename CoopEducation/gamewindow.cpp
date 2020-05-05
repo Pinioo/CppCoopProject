@@ -10,6 +10,8 @@ GameWindow::GameWindow(QWidget *parent) :
     ui->setupUi(this);
     game = new Game();
 
+    ui->urlInput->setText("ws://127.0.0.1:" + QString::number(Game::DEFAULT_PORT));
+
     disconnectedSocket();
 
     connect(game, &Game::sigDisconnect, this, &GameWindow::disconnectedSocket);

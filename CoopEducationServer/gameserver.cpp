@@ -3,7 +3,7 @@
 
 GameServer::GameServer() : QWebSocketServer(nullptr, NonSecureMode)
 {
-    listen(QHostAddress::Any, 8888);
+    listen(QHostAddress::Any, DEFAULT_PORT);
     if(this->serverPort() == 0){
         listen(QHostAddress::Any);
     }

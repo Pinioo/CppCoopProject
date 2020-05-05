@@ -16,6 +16,7 @@ class GameServer : public QWebSocketServer
 private:
     static constexpr int MAPS_NUMBER = 3;
     static constexpr int MAX_PLAYERS = 2;
+    static constexpr int DEFAULT_PORT = 8888;
 
     QSharedPointer<Map::Map> _maps[MAPS_NUMBER];
     QWebSocket* _playerSocket[MAX_PLAYERS];
